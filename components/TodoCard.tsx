@@ -17,10 +17,6 @@ export function TodoCard() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { theme, setTheme } = useTheme()
 
-  useEffect(() => {
-    loadTodos()
-  }, [])
-
   const loadTodos = async () => {
     setIsLoading(true)
     const data = await getTodos()
@@ -28,14 +24,20 @@ export function TodoCard() {
     setIsLoading(false)
   }
 
+  useEffect(() => {
+    ;(async () => {
+      await loadTodos()
+    })()
+  }, [])
+
   const handleAddTodo = async (input: CreateTodoInput) => {
     const newTodo = await createTodo(input)
     setTodos([newTodo, ...todos])
   }
 
-  const handleToggleTodo = async (id: string, completed: boolean) => {
-    await updateTodo(id, { completed })
-    setTodos(todos.map((t) => (t.id === id ? { ...t, completed } : t)))
+  const handleStatusChange = async (id: string, status: "todo" | "in_progress" | "completed") => {
+    await updateTodo(id, { status })
+    setTodos(todos.map((t) => (t.id === id ? { ...t, status } : t)))
   }
 
   const handleUpdateTodo = async (id: string, title: string) => {
@@ -48,7 +50,7 @@ export function TodoCard() {
     setTodos(todos.filter((t) => t.id !== id))
   }
 
-  const completedCount = todos.filter((t) => t.completed).length
+  const completedCount = todos.filter((t) => t.status === "completed").length
   const totalCount = todos.length
 
   return (
@@ -100,7 +102,7 @@ export function TodoCard() {
                   <TodoItem
                     key={todo.id}
                     todo={todo}
-                    onToggle={handleToggleTodo}
+                    onStatusChange={handleStatusChange}
                     onUpdate={handleUpdateTodo}
                     onDelete={handleDeleteTodo}
                   />

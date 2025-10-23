@@ -21,8 +21,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check for existing token on mount
-    const token = localStorage.getItem("auth_token")
+    // Check for existing token on mount (from localStorage or cookies)
+    const token = localStorage.getItem("auth_token") || 
+      document.cookie.split('; ').find(row => row.startsWith('auth_token='))?.split('=')[1]
+    
     if (token) {
       getCurrentUser(token)
         .then((user) => {
@@ -30,10 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(user)
           } else {
             localStorage.removeItem("auth_token")
+            document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
           }
         })
         .catch(() => {
           localStorage.removeItem("auth_token")
+          document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
         })
         .finally(() => {
           setLoading(false)
@@ -47,18 +51,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const response = await apiLogin(input)
     setUser(response.user)
     localStorage.setItem("auth_token", response.token)
+    // Also set cookie for middleware
+    document.cookie = `auth_token=${response.token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`
   }
 
   const signup = async (input: SignupInput) => {
     const response = await apiSignup(input)
     setUser(response.user)
     localStorage.setItem("auth_token", response.token)
+    // Also set cookie for middleware
+    document.cookie = `auth_token=${response.token}; path=/; max-age=${7 * 24 * 60 * 60}; secure; samesite=strict`
   }
 
   const logout = async () => {
     await apiLogout()
     setUser(null)
     localStorage.removeItem("auth_token")
+    // Also clear cookie
+    document.cookie = "auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
   }
 
   return (

@@ -2,7 +2,7 @@ export interface Todo {
   id: string
   title: string
   description?: string
-  completed: boolean
+  status: "todo" | "in_progress" | "completed"
   priority: "low" | "medium" | "high"
   dueDate?: Date
   createdAt: Date
@@ -11,6 +11,7 @@ export interface Todo {
 export interface CreateTodoInput {
   title: string
   description?: string
+  status?: "todo" | "in_progress" | "completed"
   priority: "low" | "medium" | "high"
   dueDate?: Date
 }
@@ -18,7 +19,7 @@ export interface CreateTodoInput {
 export interface UpdateTodoInput {
   title?: string
   description?: string
-  completed?: boolean
+  status?: "todo" | "in_progress" | "completed"
   priority?: "low" | "medium" | "high"
   dueDate?: Date
 }

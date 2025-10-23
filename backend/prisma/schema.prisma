@@ -22,7 +22,7 @@ model Todo {
     id          String    @id @default(auto()) @map("_id") @db.ObjectId
     title       String
     description String?
-    completed   Boolean   @default(false)
+    status      String    @default("todo")
     priority    String    @default("medium")
     dueDate     DateTime?
     createdAt   DateTime  @default(now())

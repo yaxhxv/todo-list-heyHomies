@@ -8,6 +8,7 @@ export const todoRouter = Router()
 const createSchema = z.object({
   title: z.string().min(1),
   description: z.string().optional(),
+  status: z.enum(["todo", "in_progress", "completed"]).default("todo"),
   priority: z.enum(["low", "medium", "high"]).default("medium"),
   dueDate: z.coerce.date().optional(),
 })
@@ -15,7 +16,7 @@ const createSchema = z.object({
 const updateSchema = z.object({
   title: z.string().min(1).optional(),
   description: z.string().optional(),
-  completed: z.boolean().optional(),
+  status: z.enum(["todo", "in_progress", "completed"]).optional(),
   priority: z.enum(["low", "medium", "high"]).optional(),
   dueDate: z.coerce.date().optional().nullable(),
 })
@@ -38,6 +39,7 @@ todoRouter.post("/", async (req: AuthRequest, res) => {
     data: {
       title: data.title,
       description: data.description,
+      status: data.status,
       priority: data.priority,
       dueDate: data.dueDate,
       userId: req.userId!,

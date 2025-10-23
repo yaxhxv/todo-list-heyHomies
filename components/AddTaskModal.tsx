@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -54,6 +55,7 @@ const PriorityBadge = ({
 export function AddTaskModal({ open, onOpenChange, onAdd }: AddTaskModalProps) {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [status, setStatus] = useState<"todo" | "in_progress" | "completed">("todo")
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium")
   const [dueDate, setDueDate] = useState<Date>()
   const [isLoading, setIsLoading] = useState(false)
@@ -66,12 +68,14 @@ export function AddTaskModal({ open, onOpenChange, onAdd }: AddTaskModalProps) {
     await onAdd({
       title: title.trim(),
       description: description.trim() || undefined,
+      status,
       priority,
       dueDate,
     })
     setIsLoading(false)
     setTitle("")
     setDescription("")
+    setStatus("todo")
     setPriority("medium")
     setDueDate(undefined)
     onOpenChange(false)
@@ -125,6 +129,20 @@ export function AddTaskModal({ open, onOpenChange, onAdd }: AddTaskModalProps) {
                 <Calendar mode="single" selected={dueDate} onSelect={setDueDate} initialFocus />
               </PopoverContent>
             </Popover>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Status</Label>
+            <Select value={status} onValueChange={(value: "todo" | "in_progress" | "completed") => setStatus(value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todo">Todo</SelectItem>
+                <SelectItem value="in_progress">In Progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">

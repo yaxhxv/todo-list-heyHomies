@@ -1,74 +1,65 @@
 import type { Todo, CreateTodoInput, UpdateTodoInput } from "./types"
 
-// Mock data for demonstration
-let mockTodos: Todo[] = [
-  {
-    id: "1",
-    title: "Complete project documentation",
-    description: "Write comprehensive docs for the new features",
-    completed: false,
-    priority: "high",
-    dueDate: new Date("2025-01-25"),
-    createdAt: new Date("2025-01-15"),
-  },
-  {
-    id: "2",
-    title: "Review pull requests",
-    description: "Check and approve pending PRs from the team",
-    completed: true,
-    priority: "medium",
-    dueDate: new Date("2025-01-20"),
-    createdAt: new Date("2025-01-14"),
-  },
-  {
-    id: "3",
-    title: "Update dependencies",
-    completed: false,
-    priority: "low",
-    createdAt: new Date("2025-01-13"),
-  },
-]
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
 
-// Simulate API delay
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+function getAuthHeaders() {
+  const token = localStorage.getItem("auth_token")
+  return {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+  }
+}
 
-// TODO: Replace with real API endpoint
 export async function getTodos(): Promise<Todo[]> {
-  await delay(500)
-  return [...mockTodos]
+  const response = await fetch(`${API_BASE_URL}/api/todos`, {
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch todos")
+  }
+
+  return response.json()
 }
 
-// TODO: Replace with real API endpoint
 export async function createTodo(input: CreateTodoInput): Promise<Todo> {
-  await delay(300)
-  const newTodo: Todo = {
-    id: Math.random().toString(36).substr(2, 9),
-    title: input.title,
-    description: input.description,
-    completed: false,
-    priority: input.priority,
-    dueDate: input.dueDate,
-    createdAt: new Date(),
+  const response = await fetch(`${API_BASE_URL}/api/todos`, {
+    method: "POST",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(input),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || "Failed to create todo")
   }
-  mockTodos = [newTodo, ...mockTodos]
-  return newTodo
+
+  return response.json()
 }
 
-// TODO: Replace with real API endpoint
 export async function updateTodo(id: string, input: UpdateTodoInput): Promise<Todo> {
-  await delay(300)
-  const todoIndex = mockTodos.findIndex((t) => t.id === id)
-  if (todoIndex === -1) throw new Error("Todo not found")
+  const response = await fetch(`${API_BASE_URL}/api/todos/${id}`, {
+    method: "PATCH",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(input),
+  })
 
-  mockTodos[todoIndex] = {
-    ...mockTodos[todoIndex],
-    ...input,
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || "Failed to update todo")
   }
-  return mockTodos[todoIndex]
+
+  return response.json()
 }
 
-// TODO: Replace with real API endpoint
 export async function deleteTodo(id: string): Promise<void> {
-  await delay(300)
-  mockTodos = mockTodos.filter((t) => t.id !== id)
+  const response = await fetch(`${API_BASE_URL}/api/todos/${id}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message || "Failed to delete todo")
+  }
 }
