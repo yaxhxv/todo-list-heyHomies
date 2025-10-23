@@ -50,22 +50,22 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-background via-background to-muted/20">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        <Card className="w-full max-w-md backdrop-blur-sm bg-card/95 border-border/50 shadow-xl">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
-            <CardDescription className="text-center">Enter your information to get started</CardDescription>
+        <Card className="w-[600px] max-w-xl backdrop-blur-sm bg-card/95 border-border/50 shadow-xl">
+          <CardHeader className="space-y-3 pb-8">
+            <CardTitle className="text-3xl font-bold text-center">Create an account</CardTitle>
+            <CardDescription className="text-center text-base">Enter your information to get started</CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6 px-8">
               {error && (
-                <div className="p-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
+                <div className="p-4 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md">
                   {error}
                 </div>
               )}
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+              <div className="space-y-3">
+                <Label htmlFor="name" className="text-base font-medium">Name</Label>
                 <Input
                   id="name"
                   type="text"
@@ -74,10 +74,11 @@ export default function SignupPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   disabled={loading}
+                  className="h-12 text-base"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              <div className="space-y-3">
+                <Label htmlFor="email" className="text-base font-medium">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -86,10 +87,11 @@ export default function SignupPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={loading}
+                  className="h-12 text-base"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+              <div className="space-y-3">
+                <Label htmlFor="password" className="text-base font-medium">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -98,10 +100,11 @@ export default function SignupPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={loading}
+                  className="h-12 text-base"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="space-y-3">
+                <Label htmlFor="confirmPassword" className="text-base font-medium">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
@@ -110,14 +113,15 @@ export default function SignupPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   disabled={loading}
+                  className="h-12 text-base"
                 />
               </div>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
-              <Button type="submit" className="w-full" disabled={loading}>
+            <CardFooter className="flex flex-col space-y-6 px-8 pt-6">
+              <Button type="submit" className="w-full h-12 text-base" disabled={loading}>
                 {loading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Creating account...
                   </>
                 ) : (
