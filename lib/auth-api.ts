@@ -1,6 +1,6 @@
 import type { LoginInput, SignupInput, AuthResponse, User } from "./types"
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
 
 export async function login(input: LoginInput): Promise<AuthResponse> {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
